@@ -5,6 +5,7 @@ namespace maike\core;
 use think\App;
 use think\Validate;
 use think\exception\ValidateException;
+use think\facade\Config;
 use maike\utils\Json;
 
 /**
@@ -86,12 +87,15 @@ abstract class Controller
      * @param string|array $msg
      * @return maike\utils\Json
      */
-    protected function success($data = null, $msg = 'success')
+    protected function success($data = null, $msg = 'success', $code = false)
     {
         if (is_object($data)) {
             $data = $data->toArray();
         }
-        return Json::Success($data, $msg);
+        if (!$code) {
+            $code = Config::get("api.code.success");
+        }
+        return Json::Success($data, $msg, $code);
     }
 
     /**
@@ -100,11 +104,14 @@ abstract class Controller
      * @param array $data
      * @return maike\utils\Json
      */
-    protected function error($msg = 'error', $data = null)
+    protected function error($msg = 'error', $data = null, $code = false)
     {
         if (is_object($data)) {
             $data = $data->toArray();
         }
-        return Json::Error($msg, $data);
+        if (!$code) {
+            $code = Config::get("api.code.error");
+        }
+        return Json::Error($msg, $data, $code);
     }
 }

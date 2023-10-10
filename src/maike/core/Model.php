@@ -24,9 +24,6 @@ abstract class Model extends BaseModel
 
     protected $with = [];
 
-    protected $deleteTime = 'delete_time';
-    protected $defaultSoftDelete = 0;
-
     /**
      * 模型基类初始化
      */
@@ -123,10 +120,10 @@ abstract class Model extends BaseModel
 
     /**
      * 批量新增数据
-     * @param iterable $dataSet [['id'=>101, 'name'=>'li'],['id'=>102, 'name'=>'wang']]
+     * @param array $dataSet [['id'=>101, 'name'=>'li'],['id'=>102, 'name'=>'wang']]
      * @return array|false
      */
-    public function batchCreate(iterable $dataSet)
+    public function batchCreate(array $dataSet)
     {
         if (empty($dataSet)) {
             return false;

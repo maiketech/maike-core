@@ -48,16 +48,28 @@ class Arr
      * @param string $child 子元素键名
      * @return array
      */
-    public static function ToTree(array $arr, int $root = 0, string $pk = 'id', string $pid = 'pid', string $child = 'children'): array
+    public static function ToTree(array $arr, int $root = -1, string $pk = 'id', string $pid = 'parent_id', string $child = 'children', bool $onlyChild = false): array
     {
         $tree = [];
-        foreach ($arr as $item) {
-            $tree[$item[$pk]] = $item;
+        if (is_array($arr)) {
+            if ($root < 0) {
+                $arr = self::ColumnToKey($arr, $pk);
+                foreach ($arr as $item) {
+                    if (isset($arr[$item[$pid]])) {
+                        $arr[$item[$pid]][$child][] = &$arr[$item[$pk]];
+                    } else {
+                        $tree[] = &$arr[$item[$pk]];
+                    }
+                }
+            } else {
+                $tree = self::ColumnToKey($arr, $pk);
+                foreach ($tree as $item) {
+                    $tree[$item[$pid]][$child][] = &$tree[$item[$pk]];
+                }
+                return isset($tree[$root]) ? ($onlyChild ? $tree[$root][$child] : [$tree[$root]]) : [];
+            }
         }
-        foreach ($tree as $item) {
-            $tree[$item[$pid]][$child][] = &$tree[$item[$pk]];
-        }
-        return $tree[$root][$child] ?? [];
+        return $tree;
     }
 
     /**
@@ -84,6 +96,34 @@ class Arr
             $new_array[$k] = $arr[$k];
         }
         return $new_array;
+    }
+
+    /**
+     * 多维数组排序
+     *
+     * @param  [type] $args          [description]
+     * @return [type]                [description]
+     */
+    public static function MSort(...$args)
+    {
+        $arr = array_shift($args); // 取到要排序的数组，剩下的为要排序的键和排序类型
+        $sort_arg = [];
+        foreach ($args as $arg) {
+            // 这里主要是为了得到排序的key对应的值
+            $sort = $arr;
+            if (is_string($arg)) {
+                $arg = explode('.', $arg); // 我设定参数里面多维数组下的键，用‘.’连接下级的键，这里得到键，然后下面循环取得数组$arr里面该键对应的值
+                foreach ($arg as $key) {
+                    $sort = array_column($sort, $key); // 每次循环$sort的维度就会减一
+                }
+                $sort_arg[] = $sort;
+            } else {
+                $sort_arg[] = $arg; // 排序方法SORT_ASC、SORT_DESC等
+            }
+        }
+        $sort_arg[] = &$arr; // 这个数组大致结构为：[$sort, SORT_ASC, $sort2, SORT_DESC,$arr]
+        call_user_func_array('array_multisort', $sort_arg); // 因为参数不确定数量，所以不能直接array_multisort($sort, SORT_ASC, $sort2, SORT_DESC,$arr)，用call_user_func_array执行
+        return ($arr);
     }
 
     /**
@@ -249,6 +289,9 @@ class Arr
                     break;
                 case '<=':
                     $item[$searchKey] <= $searchVal && $new[$key] = $item;
+                    break;
+                case '<>':
+                    $item[$searchKey] != $searchVal && $new[$key] = $item;
                     break;
                 case 'in':
                     in_array($item[$searchKey], (array)$searchVal) && $new[$key] = $item;
