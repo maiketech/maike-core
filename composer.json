@@ -1,5 +1,5 @@
 {
-    "name": "maike/core",
+    "name": "jerry/maike-core",
     "autoload": {
         "psr-4": {
             "maike\\": "src/maike/"
