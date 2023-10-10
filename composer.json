@@ -1,5 +1,5 @@
 {
-    "name": "jerrynine/maike-core",
+    "name": "maiketech/core",
     "autoload": {
         "psr-4": {
             "maike\\": "src/maike/"
