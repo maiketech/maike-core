@@ -1,0 +1,16 @@
+{
+    "name": "maike/core",
+    "autoload": {
+        "psr-4": {
+            "maike\\": "src/maike/"
+        }
+    },
+    "authors": [
+        {
+            "name": "jerry",
+            "email": "xkd@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
