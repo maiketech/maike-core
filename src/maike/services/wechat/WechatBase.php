@@ -37,7 +37,7 @@ class WechatBase
     {
         $aesKey = base64_decode($session_key);
         if (strlen($iv) != 24) {
-            $this->error = '参数错误';
+            $this->errorMessage = '参数错误';
             return false;
         }
         $aesIV = base64_decode($iv);
@@ -45,11 +45,11 @@ class WechatBase
         $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
         $dataObj = json_decode($result, true);
         if (!$dataObj || !is_array($dataObj)) {
-            $this->error = '数据错误';
+            $this->errorMessage = '数据错误';
             return false;
         }
         if ($dataObj['watermark']['app_id'] != $this->config['app_id']) {
-            $this->error = 'appid错误';
+            $this->errorMessage = 'appid错误';
             return false;
         }
         return $dataObj;
