@@ -3,10 +3,10 @@
 namespace maike\utils;
 
 /**
- * 身份证帮助类
+ * 身份证工具类
  * @package maike\utils
  */
-class IdCard
+class IdCardUtil
 {
     /**
      * 根据身份证号码获取性别

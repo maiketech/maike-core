@@ -3,10 +3,6 @@
 namespace maike\services\pay;
 
 use think\facade\Config;
-use maike\interfaces\PayInterface;
-use maike\utils\Json as JsonUtil;
-use maike\utils\Http;
-use maike\services\pay\Wechat;
 
 /**
  * 支付类

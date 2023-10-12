@@ -3,10 +3,10 @@
 namespace maike\utils;
 
 /**
- * 数组帮助类
+ * 数组工具类
  * @package maike\utils
  */
-class Arr
+class ArrUtil
 {
     /**
      * 数组转换为字符串

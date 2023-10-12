@@ -7,8 +7,8 @@ use think\facade\Config;
 use think\facade\Cache;
 use think\facade\Log;
 use maike\traits\ErrorTrait;
-use maike\utils\Http;
-use maike\utils\Json as JsonUtil;
+use maike\utils\HttpUtil;
+use maike\utils\JsonUtil;
 
 /**
  * 微信基类
@@ -66,7 +66,7 @@ class WechatBase
         if (!$token || empty($token)) {
             // 请求API获取 access_token
             $url = $this->apiUrl . "/cgi-bin/token";
-            $response = Http::get($url, [
+            $response = HttpUtil::get($url, [
                 'appid' => $this->config['app_id'],
                 'secret' => $this->config['secret'],
                 'grant_type' => 'client_credential'
@@ -122,9 +122,9 @@ class WechatBase
         $url = $this->apiUrl . $url;
         if ($isPost) {
             $params = JsonUtil::Encode($params);
-            $response = Http::post($url, $params, $header);
+            $response = HttpUtil::post($url, $params, $header);
         } else {
-            $response = Http::get($url, $params);
+            $response = HttpUtil::get($url, $params);
         }
 
         if ($response && isset($response['status']) && isset($response['content'])) {

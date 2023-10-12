@@ -6,7 +6,7 @@ use think\App;
 use think\Validate;
 use think\exception\ValidateException;
 use think\facade\Config;
-use maike\utils\Json;
+use think\Response;
 
 /**
  * 控制器基础类
@@ -15,7 +15,7 @@ abstract class Controller
 {
     /**
      * Request实例
-     * @var \app\Request
+     * @var \maike\core\Request
      */
     protected $request;
 
@@ -85,33 +85,32 @@ abstract class Controller
      * 返回成功json
      * @param array $data
      * @param string|array $msg
-     * @return maike\utils\Json
+     * @return \think\response\Json
      */
-    protected function success($data = null, $msg = 'success', $code = false)
+    protected function success($data = null, $msg = 'success', $code = 10000, $statusCode = 200, $header = [], $options = [])
     {
         if (is_object($data)) {
             $data = $data->toArray();
         }
         if (!$code) {
-            $code = Config::get("api.code.success");
+            $code = Config::get("api.status_code.success");
         }
-        return Json::Success($data, $msg, $code);
+        $result = compact('code', 'msg', 'data');
+        return Response::create($data, 'json', $statusCode)->header($header)->options($options);
     }
 
     /**
      * 返回失败json
      * @param string $msg
      * @param array $data
-     * @return maike\utils\Json
+     * @return \think\response\Json
      */
-    protected function error($msg = 'error', $data = null, $code = false)
+    protected function error($msg = 'error', $data = null, $code = 0, $statusCode = 200, $header = [], $options = [])
     {
         if (is_object($data)) {
             $data = $data->toArray();
         }
-        if (!$code) {
-            $code = Config::get("api.code.error");
-        }
-        return Json::Error($msg, $data, $code);
+        $result = compact('code', 'msg', 'data');
+        return Response::create($result, 'json', $statusCode)->header($header)->options($options);
     }
 }

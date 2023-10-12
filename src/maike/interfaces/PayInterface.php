@@ -4,7 +4,7 @@ namespace maike\interfaces;
 
 interface PayInterface
 {
-    public function create($outTradeNo, $payMoney, $desc = '', $openid = '', $type = 'jsapi');
+    public function create($data);
 
     public function notify();
 

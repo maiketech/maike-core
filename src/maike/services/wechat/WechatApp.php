@@ -13,21 +13,12 @@ class WechatApp extends WechatBase
 
     public static function init($config = [])
     {
-<<<<<<< .mine
-        if (!is_array($config) || count($config) < 1) {
-            $config = Config::get('wechat.app');
-        }
-        self::$instance === null && (self::$instance = new static($config));
-
-
-=======
         if (self::$instance === null) {
             if (!$config || count($config) < 1) {
                 $config = Config::get("wechat.app");
             }
             self::$instance = new static($config);
         }
->>>>>>> .theirs
         return self::$instance;
     }
 

@@ -2,15 +2,10 @@
 
 namespace maike\traits;
 
-use Firebase\JWT\BeforeValidException;
-use Firebase\JWT\ExpiredException;
-use Firebase\JWT\SignatureInvalidException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use think\facade\Env;
 use think\facade\Request;
-use UnexpectedValueException;
-use maike\exception\ApiException;
 
 trait JwtAuthModelTrait
 {

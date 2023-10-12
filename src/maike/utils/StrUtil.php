@@ -3,10 +3,10 @@
 namespace maike\utils;
 
 /**
- * 字符串帮助类
+ * 字符串工具类
  * @package maike\utils
  */
-class Str
+class StrUtil
 {
     /**
      * 字符串转换为数组

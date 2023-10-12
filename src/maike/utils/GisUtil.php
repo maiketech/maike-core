@@ -3,7 +3,8 @@
 namespace maike\utils;
 
 /**
- * Class GpsUtils
+ * 坐标工具类
+ * @package maike\utils
  */
 class GisUtil
 {

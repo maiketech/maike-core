@@ -2,12 +2,11 @@
 
 namespace maike\services\pay;
 
-use Exception;
-use think\facade\Config;
+use think\Exception;
 use think\facade\Cache;
 use maike\interfaces\PayInterface;
-use maike\utils\Json as JsonUtil;
-use maike\utils\Http;
+use maike\utils\JsonUtil;
+use maike\utils\HttpUtil;
 
 /**
  * 微信支付类
@@ -38,13 +37,10 @@ class Wechat extends PayBase implements PayInterface
     /**
      * 微信小程序支付
      *
-     * @param string $outTradeNo
-     * @param float $payMoney
-     * @param string $openid
-     * @param string $desc
+     * @param array $data
      * @return array
      */
-    public function create($outTradeNo, $payMoney, $desc = '', $openid = '', $type = 'jsapi')
+    public function create($data)
     {
         $types = [
             'h5'     => '/v3/pay/transactions/h5',
@@ -55,8 +51,8 @@ class Wechat extends PayBase implements PayInterface
         $order = [
             'appid' => $this->config['mini_app_id'],
             'mchid' => $this->config['mch_id'],
-            'out_trade_no' => $outTradeNo,
-            'description' => empty($desc) ? $outTradeNo . '付款' : $desc,
+            'out_trade_no' => $data['out_trade_no'],
+            'description' => empty($desc) ? $data['out_trade_no'] . '付款' : $desc,
             'amount' => [
                 'total' => intval($payMoney * 100),
             ],
@@ -191,9 +187,9 @@ class Wechat extends PayBase implements PayInterface
         $res = false;
         if ($method == 'POST') {
             $data = JsonUtil::Encode($data);
-            $res = Http::post($url, $data, $headers);
+            $res = HttpUtil::post($url, $data, $headers);
         } else {
-            $res = Http::get($url, $data, $headers);
+            $res = HttpUtil::get($url, $data, $headers);
         }
 
         if ($res && isset($res['status']) && isset($res['content'])) {

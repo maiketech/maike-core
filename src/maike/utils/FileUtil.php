@@ -3,10 +3,9 @@
 namespace maike\utils;
 
 use PhpOffice\PhpWord\IOFactory as PHPWordIOFactory;
-use Dompdf\Dompdf;
 
 /**
- * 文件处理类
+ * 文件工具类
  * @package maike\utils
  */
 class FileUtil
@@ -20,12 +19,8 @@ class FileUtil
         return $htmlWriter->getWriterPart('Body')->write();
     }
 
-    public static function HtmlToPdf($html, $filePath = null)
+    public static function WordToPdf($wordTmp, $filePath = null)
     {
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html,'UTF-8');
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        $dompdf->stream("测试PDF");
+
     }
 }

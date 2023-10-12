@@ -3,10 +3,10 @@
 namespace maike\utils;
 
 /**
- * 数学计算帮助类
+ * 数学计算工具类
  * @package maike\utils
  */
-class Math
+class MathUtil
 {
     /**
      * 两个任意精度数字的减法

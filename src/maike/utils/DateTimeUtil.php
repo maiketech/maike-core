@@ -3,10 +3,10 @@
 namespace maike\utils;
 
 /**
- * 日期时间帮助类
+ * 日期时间工具类
  * @package maike\utils
  */
-class DT
+class DateTimeUtil
 {
     /**
      * 日期时间格式化（YmdTHisZ）

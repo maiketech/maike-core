@@ -3,10 +3,10 @@
 namespace maike\utils;
 
 /**
- * HTTP请求服务
- * @package maike\service
+ * HTTP请求工具
+ * @package maike\utils
  */
-class Http
+class HttpUtil
 {
     /**
      * header头信息
