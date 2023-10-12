@@ -15,9 +15,24 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.0",
+        "topthink/framework": "^8.0",
         "spatie/macroable": "^2.0",
         "firebase/php-jwt": "^6.9",
         "phpoffice/phpword": "^1.1",
         "phpoffice/phpspreadsheet": "^1.29"
-    }
+    },
+    "repositories": [
+        {
+            "description": "阿里云镜像",
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/",
+            "canonical": false
+        },
+        {
+            "description": "腾讯云镜像",
+            "type": "composer",
+            "url": "https://mirrors.cloud.tencent.com/composer/",
+            "canonical": false
+        }
+    ]
 }

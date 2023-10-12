@@ -4,6 +4,7 @@ namespace maike\services\pay;
 
 use think\Exception;
 use think\facade\Cache;
+use think\facade\Request;
 use maike\interfaces\PayInterface;
 use maike\utils\JsonUtil;
 use maike\utils\HttpUtil;
@@ -42,6 +43,13 @@ class Wechat extends PayBase implements PayInterface
      */
     public function create($data)
     {
+        $out_trade_no = isset($data['out_trade_no']) ? $data['out_trade_no'] : '';
+        $amount = isset($data['amount']) && $data['amount'] > 0 ? intval($data['amount'] * 100) : 0;
+        $openid = isset($data['openid']) ? $data['openid'] : '';
+        $type = isset($data['type']) ? $data['type'] : 'jsapi';
+        $desc = isset($data['desc']) ? $data['desc'] : '';
+        $notify_url = isset($data['notify_url']) ? $data['notify_url'] : $this->config['notify_url'];
+
         $types = [
             'h5'     => '/v3/pay/transactions/h5',
             'app'    => '/v3/pay/transactions/app',
@@ -51,15 +59,15 @@ class Wechat extends PayBase implements PayInterface
         $order = [
             'appid' => $this->config['mini_app_id'],
             'mchid' => $this->config['mch_id'],
-            'out_trade_no' => $data['out_trade_no'],
-            'description' => empty($desc) ? $data['out_trade_no'] . '付款' : $desc,
+            'out_trade_no' => $out_trade_no,
+            'description' => empty($desc) ? $out_trade_no . '付款' : $desc,
             'amount' => [
-                'total' => intval($payMoney * 100),
+                'total' => $amount,
             ],
             'payer' => [
                 'openid' => $openid,
             ],
-            "notify_url" => $this->config['notify_url']
+            "notify_url" => $notify_url
         ];
         $result = $this->request('POST', $types[$type], $order);
 
@@ -179,7 +187,7 @@ class Wechat extends PayBase implements PayInterface
         $headers = array_merge([
             'Accept: application/json',
             'Content-Type: application/json',
-            'User-Agent: https://maike-tech.com',
+            'User-Agent: ' . Request::domain(),
             "Authorization: WECHATPAY2-SHA256-RSA2048 {$token}",
             // "Wechatpay-Serial: {$this->config['wechat_cert_serial']}"
         ], $headers);

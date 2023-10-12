@@ -12,7 +12,7 @@ trait ErrorTrait
      * 错误信息
      * @var string
      */
-    protected $error = '';
+    protected $errorMessage = '';
 
     /**
      * 设置错误信息
@@ -21,7 +21,7 @@ trait ErrorTrait
      */
     protected function setError(string $error): bool
     {
-        $this->error = $error ?: '未知错误';
+        $this->errorMessage = $error ?: '未知错误';
         return false;
     }
 
@@ -31,7 +31,7 @@ trait ErrorTrait
      */
     public function getError(): string
     {
-        return $this->error;
+        return $this->errorMessage;
     }
 
     /**
@@ -40,6 +40,6 @@ trait ErrorTrait
      */
     public function hasError(): bool
     {
-        return !empty($this->error);
+        return !empty($this->errorMessage);
     }
 }
