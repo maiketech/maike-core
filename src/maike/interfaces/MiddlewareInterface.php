@@ -2,7 +2,7 @@
 
 namespace maike\interfaces;
 
-use app\Request;
+use maike\core\Request;
 
 interface MiddlewareInterface
 {
