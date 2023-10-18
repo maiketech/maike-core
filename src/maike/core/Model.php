@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace maike\core;
 
 use think\Model as BaseModel;
-use maike\traits\ErrorTrait;
+use maike\trait\ErrorTrait;
 
 /**
  * 模型基类
