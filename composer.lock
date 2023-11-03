@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fdfb090bfff8443076689e6c2d78308f",
+    "content-hash": "e4222946162c761f99413cebe27d3dd7",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -766,16 +766,16 @@
         },
         {
             "name": "overtrue/easy-sms",
-            "version": "dev-master",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/easy-sms.git",
-                "reference": "18aa3e1abb1cc37316b530fd904532fddfff6486"
+                "reference": "81d4deec69bbb6de6e5fdd7ab90cc933bd3e3046"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/easy-sms/zipball/18aa3e1abb1cc37316b530fd904532fddfff6486",
-                "reference": "18aa3e1abb1cc37316b530fd904532fddfff6486",
+                "url": "https://api.github.com/repos/overtrue/easy-sms/zipball/81d4deec69bbb6de6e5fdd7ab90cc933bd3e3046",
+                "reference": "81d4deec69bbb6de6e5fdd7ab90cc933bd3e3046",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -795,7 +795,6 @@
                 "mockery/mockery": "~1.3.3 || ^1.4.2",
                 "phpunit/phpunit": "^5.7 || ^7.5 || ^8.5.19 || ^9.5.8"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "hooks": {
@@ -827,7 +826,7 @@
             "description": "The easiest way to send short message.",
             "support": {
                 "issues": "https://github.com/overtrue/easy-sms/issues",
-                "source": "https://github.com/overtrue/easy-sms/tree/master"
+                "source": "https://github.com/overtrue/easy-sms/tree/2.5.0"
             },
             "funding": [
                 {
@@ -835,7 +834,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-08T03:33:16+00:00"
+            "time": "2023-08-07T07:51:17+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
