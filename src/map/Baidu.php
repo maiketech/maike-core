@@ -1,16 +1,18 @@
 <?php
 
-namespace maike\service\map;
+namespace maike\map;
 
+use maike\trait\ErrorTrait;
 use maike\util\HttpUtil;
 use maike\util\JsonUtil;
-use maike\service\BaseService;
 
 /**
  * 百度服务器端API
  */
-class BaiduMap extends BaseService
+class BaiduMap
 {
+    use ErrorTrait;
+
     static $serverUrl = "https://api.map.baidu.com";
     static $ak = "vA7awdbfgdQis6fudKKRUzxbpEgajcGx";
 

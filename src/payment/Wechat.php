@@ -1,13 +1,13 @@
 <?php
 
-namespace maike\service\pay;
+namespace maike\payment;
 
 use think\Exception;
 use think\facade\Cache;
 use think\facade\Request;
-use maike\interfaces\PayInterface;
-use maike\utils\JsonUtil;
-use maike\utils\HttpUtil;
+use maike\interface\PayInterface;
+use maike\util\JsonUtil;
+use maike\util\HttpUtil;
 
 /**
  * 微信支付类
@@ -17,15 +17,15 @@ class Wechat extends PayBase implements PayInterface
     protected $apiUrl = 'https://api.mch.weixin.qq.com';
     protected $config = [
         'mch_id' => '',
-        'mch_secret_key_v2' => '',
-        'mch_secret_key' => '',
-        'mch_cert_serial' => '',
+        'mch_secret' => '',
+        'mch_secret_v2' => '',
         'mch_cert' => '',
-        'mch_cert_key' => '',
-        'wechat_cert_serial' => '',
+        'mch_public_cert' => '',
+        'app_id' => '',
+        'wechat_cert' => '',
         'notify_url' => '',
-        'mp_app_id' => '',
-        'mini_app_id' => ''
+        'sub_app_id' => '',
+        'sub_mch_id' => ''
     ];
     const KEY_LENGTH_BYTE = 32;
     const AUTH_TAG_LENGTH_BYTE = 16;
@@ -50,32 +50,58 @@ class Wechat extends PayBase implements PayInterface
         $desc = isset($data['desc']) ? $data['desc'] : '';
         $notify_url = isset($data['notify_url']) ? $data['notify_url'] : $this->config['notify_url'];
 
-        $types = [
-            'h5'     => '/v3/pay/transactions/h5',
-            'app'    => '/v3/pay/transactions/app',
-            'jsapi'  => '/v3/pay/transactions/jsapi',
-            'native' => '/v3/pay/transactions/native',
-        ];
-        $order = [
-            'appid' => $this->config['mini_app_id'],
-            'mchid' => $this->config['mch_id'],
-            'out_trade_no' => $out_trade_no,
-            'description' => empty($desc) ? $out_trade_no . '付款' : $desc,
-            'amount' => [
-                'total' => $amount,
-            ],
-            'payer' => [
-                'openid' => $openid,
-            ],
-            "notify_url" => $notify_url
-        ];
+        if ($this->config['notify_url'] == 'service') {
+            // 服务商模式
+            $types = [
+                'h5'     => '/v3/pay/partner/transactions/h5',
+                'app'    => '/v3/pay/partner/transactions/app',
+                'jsapi'  => '/v3/pay/partner/transactions/jsapi',
+                'native' => '/v3/pay/partner/transactions/native',
+            ];
+            $order = [
+                'sp_appid' => $this->config['app_id'],
+                'sp_mchid' => $this->config['mch_id'],
+                'sub_appid' => $this->config['sub_app_id'],
+                'sub_mchid' => $this->config['sub_mch_id'],
+                'out_trade_no' => $out_trade_no,
+                'description' => empty($desc) ? $out_trade_no . '付款' : $desc,
+                'amount' => [
+                    'total' => $amount,
+                ],
+                'payer' => [
+                    'sub_openid' => $openid,
+                ],
+                "notify_url" => $notify_url
+            ];
+        } else {
+            $types = [
+                'h5'     => '/v3/pay/transactions/h5',
+                'app'    => '/v3/pay/transactions/app',
+                'jsapi'  => '/v3/pay/transactions/jsapi',
+                'native' => '/v3/pay/transactions/native',
+            ];
+            $order = [
+                'appid' => $this->config['mini_app_id'],
+                'mchid' => $this->config['mch_id'],
+                'out_trade_no' => $out_trade_no,
+                'description' => empty($desc) ? $out_trade_no . '付款' : $desc,
+                'amount' => [
+                    'total' => $amount,
+                ],
+                'payer' => [
+                    'openid' => $openid,
+                ],
+                "notify_url" => $notify_url
+            ];
+        }
+
         $result = $this->request('POST', $types[$type], $order);
 
         if (!$result) return false;
 
         // 支付参数签名
         $time = strval(time());
-        $appid = $this->config['mini_app_id'];
+        $appid = $this->config['app_id'];
         $nonceStr = self::createNoncestr();
         if ($type === 'app') {
             $sign = $this->buildDataSign(join("\n", [$appid, $time, $nonceStr, $result['prepay_id'], '']));
@@ -111,25 +137,33 @@ class Wechat extends PayBase implements PayInterface
     /**
      * 查询订单
      *
-     * @param string $tradeNo
+     * @param string $out_trade_no
      * @return array|false
      */
-    public function query($tradeNo)
+    public function query($out_trade_no)
     {
-        $path = "/v3/pay/transactions/out-trade-no/{$tradeNo}";
+        if ($this->config['notify_url'] == 'service') {
+            $path = "/v3/pay/partner/transactions/out-trade-no/{$out_trade_no}";
+        } else {
+            $path = "/v3/pay/transactions/out-trade-no/{$out_trade_no}";
+        }
         return $this->request('GET', "{$path}?mchid={$this->config['mch_id']}");
     }
 
     /**
      * 关闭订单
      *
-     * @param string $tradeNo
+     * @param string $out_trade_no
      * @return array|false
      */
-    public function close($tradeNo)
+    public function close($out_trade_no)
     {
         $data = ['mchid' => $this->config['mch_id']];
-        $path = "/v3/pay/transactions/out-trade-no/{$tradeNo}/close";
+        if ($this->config['notify_url'] == 'service') {
+            $path = "/v3/pay/partner/transactions/out-trade-no/{$out_trade_no}/close";
+        } else {
+            $path = "/v3/pay/transactions/out-trade-no/{$out_trade_no}/close";
+        }
         return $this->request('POST', $path, $data);
     }
 

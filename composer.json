@@ -19,7 +19,8 @@
         "spatie/macroable": "^2.0",
         "firebase/php-jwt": "^6.9",
         "phpoffice/phpword": "^1.1",
-        "phpoffice/phpspreadsheet": "^1.29"
+        "phpoffice/phpspreadsheet": "^1.29",
+        "overtrue/easy-sms": "dev-master"
     },
     "repositories": [
         {

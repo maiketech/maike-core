@@ -56,18 +56,24 @@ class ExceptionHandle extends Handle
     {
         // 添加自定义异常处理机制
         $massageData = Env::get('APP_DEBUG', false) ? [
-            'message'  => $e->getMessage(),
+            'code' => $e->getCode(),
+            'msg'  => $e->getMessage(),
+            'data' => [],
             'file'     => $e->getFile(),
             'line'     => $e->getLine(),
             'trace'    => $e->getTrace(),
             'previous' => $e->getPrevious(),
-        ] : [];
+        ] : [
+            'code' => $e->getCode(),
+            'msg' => $e->getMessage(),
+            'data' => []
+        ];
 
         // 添加自定义异常处理机制
         if ($e instanceof DbException) {
-            return app('json')->fail('数据获取失败', $massageData);
-        } elseif ($e instanceof ApiException) {
-            return app('json')->make($e->getCode() ?: 400, $e->getMessage(), $massageData);
+            return json($massageData);
+        } elseif ($e instanceof ApiException || $e instanceof ValidateException || $e instanceof ModelNotFoundException) {
+            return json($massageData);
         }
         // 其他错误交给系统处理
         return parent::render($request, $e);

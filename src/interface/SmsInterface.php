@@ -4,5 +4,5 @@ namespace maike\interface;
 
 interface SmsInterface
 {
-    public function send($data);
+    public function send($mobile, $data);
 }

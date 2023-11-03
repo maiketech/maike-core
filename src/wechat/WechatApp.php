@@ -1,6 +1,6 @@
 <?php
 
-namespace maike\service\wechat;
+namespace maike\wechat;
 
 use think\facade\Config;
 

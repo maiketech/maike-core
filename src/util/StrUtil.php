@@ -2,6 +2,8 @@
 
 namespace maike\util;
 
+use maike\util\StrUtil as UtilStrUtil;
+
 /**
  * 字符串工具类
  * @package maike\util
@@ -151,7 +153,7 @@ class StrUtil
         } else {
             // 中文随机字
             for ($i = 0; $i < $len; $i++) {
-                $str .= Str::Sub($chars, floor(mt_rand(0, mb_strlen($chars, 'utf-8') - 1)), 1);
+                $str .= self::Sub($chars, floor(mt_rand(0, mb_strlen($chars, 'utf-8') - 1)), 1);
             }
         }
         return $str;
@@ -184,5 +186,25 @@ class StrUtil
         $leftLength = intval($r / 2);
         $rightLength = ceil($r / 2) * -1;
         return mb_substr($str, 0, $leftLength) . $starStr . mb_substr($str, $rightLength);
+    }
+
+    /**
+     * 批量替换字符串（带格式）
+     *
+     * @param string $str
+     * @param array $replace 替换值数组[key=>value,key=>value]
+     * @param string $format 替换格式，*号为替换key
+     * @return void
+     */
+    public static function BatchReplace($str, array $replace, string $format = '${*}')
+    {
+        if (!$replace || !is_array($replace) || empty($replace)) return $str;
+        $searchArr = [];
+        $replaceArr = [];
+        foreach ($replace as $key => $val) {
+            $searchArr[] = str_replace('*', $key, $format);
+            $replaceArr[] = $val;
+        }
+        return str_replace($searchArr, $replaceArr, $str);
     }
 }

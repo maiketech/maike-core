@@ -1,12 +1,12 @@
 <?php
 
-namespace maike\service\wechat;
+namespace maike\wechat;
 
 use think\facade\Cache;
 use think\facade\Log;
 use maike\trait\ErrorTrait;
-use maike\utils\HttpUtil;
-use maike\utils\JsonUtil;
+use maike\util\HttpUtil;
+use maike\util\JsonUtil;
 
 /**
  * 微信基类

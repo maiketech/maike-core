@@ -34,7 +34,7 @@ class ArrUtil
     {
         if (!$arr || empty($arr)) return [];
         if (is_string($arr) && !empty($arr)) {
-            $arr = Str::ToArray($arr);
+            $arr = StrUtil::ToArray($arr);
         }
         return json_decode('[' . join(',', $arr) . ']', true);
     }

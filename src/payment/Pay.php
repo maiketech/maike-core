@@ -1,6 +1,6 @@
 <?php
 
-namespace maike\service\pay;
+namespace maike\payment;
 
 use think\facade\Config;
 
@@ -9,12 +9,11 @@ use think\facade\Config;
  */
 class Pay
 {
-
     public static function __callStatic(string $service, array $config = [])
     {
         if (!$config || count($config) < 1) {
             $config = Config::get("pay." . strtolower($service));
         }
-        return new ("maike\\services\\pay\\{$service}")($config);
+        return new ("maike\\payment\\{$service}")($config);
     }
 }

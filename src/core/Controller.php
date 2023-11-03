@@ -93,7 +93,7 @@ abstract class Controller
             $data = $data->toArray();
         }
         if (!$code) {
-            $code = Config::get("api.status_code.success");
+            $code = Config::get("core.status_code.success");
         }
         $result = compact('code', 'msg', 'data');
         return Response::create($data, 'json', $statusCode)->header($header)->options($options);

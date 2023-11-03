@@ -1,6 +1,6 @@
 <?php
 
-namespace maike\service\pay;
+namespace maike\payment;
 
 use maike\trait\ErrorTrait;
 
