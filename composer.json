@@ -3,7 +3,7 @@
     "description": "maiketech php,thinkphp core",
     "autoload": {
         "psr-4": {
-            "maike\\": "src/maike/"
+            "maike\\": "src/"
         }
     },
     "authors": [
