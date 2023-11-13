@@ -197,6 +197,24 @@ abstract class Model extends BaseModel
     }
 
     /**
+     * 合计字段值
+     *
+     * @param string $field
+     * @param array $where
+     * @param boolean $isCache
+     * @return float
+     */
+    public static function getSum($field, $where = null, $isCache = false)
+    {
+        try {
+            $model = new static;
+            return is_array($where) ? $model->where($where)->cache($isCache)->sum($field) : $model->cache($isCache)->sum($field);
+        } catch (\think\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
      * 设置JOIN查询
      * @param string $alias
      * @param array $join

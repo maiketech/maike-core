@@ -96,7 +96,7 @@ abstract class Controller
             $code = Config::get("core.status_code.success");
         }
         $result = compact('code', 'msg', 'data');
-        return Response::create($data, 'json', $statusCode)->header($header)->options($options);
+        return Response::create($result, 'json', $statusCode)->header($header)->options($options);
     }
 
     /**

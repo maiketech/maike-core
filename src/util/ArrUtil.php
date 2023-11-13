@@ -277,6 +277,7 @@ class ArrUtil
     {
         $new = [];
         foreach ($arr as $key => $item) {
+            if (!isset($item[$searchKey])) continue;
             switch ($compare) {
                 case '>':
                     $item[$searchKey] > $searchVal && $new[$key] = $item;

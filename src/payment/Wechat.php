@@ -50,7 +50,7 @@ class Wechat extends PayBase implements PayInterface
         $desc = isset($data['desc']) ? $data['desc'] : '';
         $notify_url = isset($data['notify_url']) ? $data['notify_url'] : $this->config['notify_url'];
 
-        if ($this->config['notify_url'] == 'service') {
+        if ($this->config['mode'] == 'service') {
             // 服务商模式
             $types = [
                 'h5'     => '/v3/pay/partner/transactions/h5',
@@ -81,7 +81,7 @@ class Wechat extends PayBase implements PayInterface
                 'native' => '/v3/pay/transactions/native',
             ];
             $order = [
-                'appid' => $this->config['mini_app_id'],
+                'appid' => $this->config['appid'],
                 'mchid' => $this->config['mch_id'],
                 'out_trade_no' => $out_trade_no,
                 'description' => empty($desc) ? $out_trade_no . '付款' : $desc,
@@ -142,7 +142,7 @@ class Wechat extends PayBase implements PayInterface
      */
     public function query($out_trade_no)
     {
-        if ($this->config['notify_url'] == 'service') {
+        if ($this->config['mode'] == 'service') {
             $path = "/v3/pay/partner/transactions/out-trade-no/{$out_trade_no}";
         } else {
             $path = "/v3/pay/transactions/out-trade-no/{$out_trade_no}";
@@ -159,7 +159,7 @@ class Wechat extends PayBase implements PayInterface
     public function close($out_trade_no)
     {
         $data = ['mchid' => $this->config['mch_id']];
-        if ($this->config['notify_url'] == 'service') {
+        if ($this->config['mode'] == 'service') {
             $path = "/v3/pay/partner/transactions/out-trade-no/{$out_trade_no}/close";
         } else {
             $path = "/v3/pay/transactions/out-trade-no/{$out_trade_no}/close";
@@ -254,12 +254,12 @@ class Wechat extends PayBase implements PayInterface
      */
     protected function buildDataSign($data)
     {
-        if (file_exists($this->config['mch_cert_key'])) {
-            $mch_cert_key = file_get_contents($this->config['mch_cert_key']);
+        if (file_exists($this->config['mch_cert'])) {
+            $mch_cert = file_get_contents($this->config['mch_cert']);
         } else {
-            $mch_cert_key = $this->config['mch_cert_key'];
+            $mch_cert = $this->config['mch_cert'];
         }
-        $pkeyid = openssl_pkey_get_private($mch_cert_key);
+        $pkeyid = openssl_pkey_get_private($mch_cert);
         openssl_sign($data, $signature, $pkeyid, 'sha256WithRSAEncryption');
         return base64_encode($signature);
     }

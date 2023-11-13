@@ -119,19 +119,53 @@ class DateTimeUtil
         return $arr;
     }
 
-    //php判断某一天是星期几的方法
-    public static function GetWeek($unixTime = '', $prefix = '星期')
+    /**
+     * 判断某一时间/天是星期几
+     *
+     * @param string|integer $time
+     * @param string $prefix
+     * @return void
+     */
+    public static function GetWeek($time = '', $prefix = '星期')
     {
-        $unixTime = is_numeric($unixTime) ? $unixTime : time();
+        $time = is_numeric($time) ? $time : time();
         $weekarray = array('日', '一', '二', '三', '四', '五', '六');
-        return $prefix . $weekarray[date('w', $unixTime)];
+        return $prefix . $weekarray[date('w', $time)];
     }
 
+    /**
+     * 根据时间获取上午下午字符串
+     *
+     * @param string|integer $time
+     * @return string
+     */
     public static function GetAMPM($time)
     {
         if (!is_numeric($time)) {
             $time = strtotime($time);
         }
         return str_replace(['AM', 'PM'], ['上午', '下午'], date("A", $time));
+    }
+
+    /**
+     * 补齐时间日期
+     * 
+     * @param $startDate 开始时间
+     * @param $endDate 结束时间
+     * @param string $interval 月：months，天：day，小时：hours，分钟：minutes，秒：seconds
+     * @param string $format 
+     * @return array
+     */
+    public static function Fill($startDate, $endDate, $interval = '1 months', $format = 'Y-m')
+    {
+        $list = [];
+        $currentDate = strtotime($startDate);
+        $endDate = strtotime($endDate);
+        while ($currentDate <= $endDate) {
+            $dateString = date($format, $currentDate);
+            $list[] = $dateString;
+            $currentDate = strtotime('+' . $interval, $currentDate);
+        }
+        return array_values($list);
     }
 }
