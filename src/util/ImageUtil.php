@@ -8,42 +8,40 @@ namespace maike\util;
  */
 class ImageUtil
 {
-
     /**
      * Base64图片转本地图片并保存
      * 
      * @param string $base64
-     * @param  [目录] $path [要保存的路径]
+     * @param string $filePath [要保存的路径]
      */
-    public static function Base64ToFile($base64, $path)
+    public static function Base64ToFile($base64, $filePath)
     {
         //匹配出图片的格式
-        // if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64Str, $result)) {
-        //     MDir(public_path() . $path);
-        //     $type = $result[2];
-        //     $new_file = $path . '/' . $fileNamePrefix . time() . ".{$type}";
-        //     if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64Str)))) {
-        //         return $new_file;
-        //     } else {
-        //         return false;
-        //     }
-        // } else {
-        //     return false;
-        // }
+        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64, $result)) {
+            $path = CreateDir($filePath);
+            if (is_file($filePath)) {
+                $type = $result[2]; //文件类型
+                $filePath = $path . '/' . md5(time()) . ".{$type}";
+            }
+            if (file_put_contents($filePath, base64_decode(str_replace($result[1], '', $base64)))) {
+                return $filePath;
+            }
+        }
+        return false;
     }
 
     /**
      * 图片转为Base64
      * 
-     * @param string $imagePath 图片文件
+     * @param string $filePath 图片文件
      */
-    public static function ToBase64($imagePath)
+    public static function FileToBase64($filePath)
     {
-        if (file_exists($imagePath)) {
-            $imageInfo = getimagesize($imagePath);
-            $imageData = file_get_contents($imagePath);
+        if (file_exists($filePath)) {
+            $imageInfo = getimagesize($filePath);
+            $imageData = file_get_contents($filePath);
             if ($imageData) {
-                return 'data:' . $imageInfo['mime'] . ';base64,' . chunk_split(base64_encode($imageData));
+                return 'data:' . $imageInfo['mime'] . ';base64,' . base64_encode($imageData);
             }
         }
         return '';

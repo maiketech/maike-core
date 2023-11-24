@@ -7,7 +7,7 @@ use think\facade\Config;
 /**
  * 微信小程序类
  */
-class WechatApp extends WechatBase
+class App extends WechatBase
 {
     static $instance;
 

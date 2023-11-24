@@ -8,6 +8,8 @@ use think\exception\ValidateException;
 use think\facade\Config;
 use think\Response;
 
+define('varison', '2.0.0' );
+
 /**
  * 控制器基础类
  */
@@ -15,13 +17,11 @@ abstract class Controller
 {
     /**
      * Request实例
-     * @var \maike\core\Request
      */
     protected $request;
 
     /**
      * 应用实例
-     * @var \think\App
      */
     protected $app;
 
@@ -34,6 +34,11 @@ abstract class Controller
     {
         $this->app = $app;
         $this->request = $app->request;
+
+        if (is_file(__DIR__ . '/Common.php')) {
+            include_once __DIR__ . '/Common.php';
+        }
+
         $this->initialize();
     }
 
