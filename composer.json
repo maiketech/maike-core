@@ -1,8 +1,11 @@
 {
     "name": "maiketech/maike-core",
     "description": "maiketech php,thinkphp core",
-    "version": "2.0.5",
+    "version": "2.0.6",
     "autoload": {
+        "files": [
+            "src/core/Common.php"
+        ],
         "psr-4": {
             "maike\\": "src/"
         }
@@ -22,15 +25,6 @@
         "phpoffice/phpword": "^1.1",
         "phpoffice/phpspreadsheet": "^1.29",
         "overtrue/easy-sms": "2.5"
-    },
-    "scripts": {
-        "post-root-package-install": [
-            "php -r \"copy('config/core.php', 'config/core.php');\"",
-            "php -r \"copy('config/map.php', 'config/map.php');\"",
-            "php -r \"copy('config/pay.php', 'config/pay.php');\"",
-            "php -r \"copy('config/wechat.php', 'config/wechat.php');\"",
-            "php -r \"copy('core/Common.php', 'app/Common.php');\""
-        ]
     },
     "repositories": [
         {
