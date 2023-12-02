@@ -39,6 +39,37 @@ class App extends WechatBase
         return $result;
     }
 
+    /**
+     * 发送订阅消息
+     *
+     * @param string $tplId 模板ID
+     * @param string $touser 接收者openid
+     * @param array $data   参数
+     * @param string $page  跳转页面路径
+     * @return boolean
+     */
+    public function sendMessage($tplId, $touser, $data, $page = '')
+    {
+        $params = [
+            'template_id' => $tplId,
+            'touser' => $touser,
+            'data' => $data,
+            'miniprogram_state' => 'formal',
+            'lang' => 'zh_CN'
+        ];
+        if (!empty($page)) {
+            $params['page'] = $page;
+        }
+        $result = $this->request('/cgi-bin/message/subscribe/send?access_token=' . $this->getAccessToken(), $params);
+        return $result;
+    }
+
+    /**
+     * 获取手机号码
+     *
+     * @param string $code
+     * @return array
+     */
     public function getMobile($code)
     {
         $result = $this->request('/wxa/business/getuserphonenumber?access_token=' . $this->getAccessToken(), [
@@ -47,6 +78,14 @@ class App extends WechatBase
         return $result;
     }
 
+    /**
+     * 生成小程序码
+     *
+     * @param string $scene 场景参数
+     * @param string $page 跳转页面
+     * @param integer $width 二维码的宽度
+     * @return void
+     */
     public function getWxacode($scene, $page = '',  $width = 500)
     {
         $params = [
@@ -60,6 +99,13 @@ class App extends WechatBase
         return $result;
     }
 
+    /**
+     * 生成小程序二维码
+     *
+     * @param string $path 跳转页面
+     * @param integer $width 二维码的宽度
+     * @return void
+     */
     public function getQrcode($path, $width = 500)
     {
         $params = [

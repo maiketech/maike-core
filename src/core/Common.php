@@ -6,6 +6,19 @@ declare(strict_types=1);
  * 公共函数库
  */
 
+if (!function_exists('pp')) {
+    /**
+     * 调试打印
+     *
+     * @param mixed $data
+     */
+    function pp($data)
+    {
+        halt($data);
+        die("------------ debug -------------");
+    }
+}
+
 if (!function_exists('Msectime')) {
     /**
      * 获取毫秒数
@@ -157,5 +170,18 @@ if (!function_exists('CreateDir')) {
             return $path;
         }
         return is_dir(dirname($path)) || CreateDir(dirname($path)) ? mkdir($path) : false;
+    }
+}
+
+if (!function_exists('trimAll')) {
+    /**
+     * 删除所有空格
+     *
+     * @param string $str
+     * @return string
+     */
+    function TrimAll($str)
+    {
+        return preg_replace("/\s+/", "", $str);
     }
 }

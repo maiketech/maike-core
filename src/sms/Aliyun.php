@@ -39,7 +39,7 @@ class Aliyun implements SmsInterface
             ],
             'gateways' => [
                 'errorlog' => [
-                    'file' => $config['log'],
+                    'file' => isset($config['log']) && !empty($config['log']) ? $config['log'] : app()->getRuntimePath() . 'sms.log',
                 ],
                 ...$gateways
             ],

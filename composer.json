@@ -1,7 +1,7 @@
 {
     "name": "maiketech/maike-core",
     "description": "maiketech php,thinkphp core",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "autoload": {
         "psr-4": {
             "maike\\": "src/"
@@ -28,7 +28,8 @@
             "php -r \"copy('config/core.php', 'config/core.php');\"",
             "php -r \"copy('config/map.php', 'config/map.php');\"",
             "php -r \"copy('config/pay.php', 'config/pay.php');\"",
-            "php -r \"copy('config/wechat.php', 'config/wechat.php');\""
+            "php -r \"copy('config/wechat.php', 'config/wechat.php');\"",
+            "php -r \"copy('core/Common.php', 'app/Common.php');\""
         ]
     },
     "repositories": [
