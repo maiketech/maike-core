@@ -17,6 +17,8 @@ class Aliyun implements SmsInterface
     protected $api = null;
     protected $config = [];
     protected $template = [];
+    protected $result = null;
+    protected $content = '';
 
     public function __construct($config = [])
     {
@@ -71,17 +73,29 @@ class Aliyun implements SmsInterface
             return false;
         }
         $tplData = $this->template[$tpl];
-        $content = StrUtil::BatchReplace($tplData['content'], $params);
+        $this->content = StrUtil::BatchReplace($tplData['content'], $params);
         $success = 0;
         foreach ($mobile as $m) {
-            if ($this->api->send($m, [
-                'content'  => $content,
+            $res = $this->api->send($m, [
+                'content'  => $this->content,
                 'template' => $tplData['code'],
                 'data' => $params
-            ])) {
+            ]);
+            if ($res) {
+                $this->result[] = $res;
                 $success++;
             }
         }
         return $success > 0;
+    }
+
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 }

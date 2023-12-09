@@ -149,7 +149,7 @@ if (!function_exists('GetNickname')) {
      */
     function GetNickname($pre = '', $len = 5)
     {
-        $microtime = substr(microtime(true), strpos(microtime(true), ".") + 1, 3);
+        $microtime = Msectime();
         $chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $nickname = "";
         for ($i = 0; $i < 3; $i++) {

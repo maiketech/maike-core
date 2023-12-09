@@ -303,4 +303,86 @@ class ArrUtil
         }
         return $new;
     }
+    
+    /**
+     * 通过指定运算符比较两个值
+     *
+     * @param mixed $val1
+     * @param mixed $val2
+     * @param array $compare 运算符
+     * @return boolean
+     */
+    private static function compare($val1, $val2, $compare)
+    {
+        switch ($compare) {
+            case '>':
+                return $val1 > $val2;
+            case '>=':
+                return $val1 >= $val2;
+                break;
+            case '<':
+                return $val1 < $val2;
+                break;
+            case '<=':
+                return $val1 <= $val2;
+                break;
+            case '<>':
+                return $val1 != $val2;
+                break;
+            case 'in':
+                return in_array($val1, (array)$val2);
+                break;
+            default:
+                return $val1 == $val2;
+        }
+    }
+
+    /**
+     * 二维数组多条件查找返回
+     *
+     * @param array $array
+     * @param array $conditions
+     * @return array
+     */
+    public static function MSearch($array, $conditions, $or = false)
+    {
+        $result = [];
+        foreach ($array as $index => $row) {
+            $match = 0;
+            foreach ($conditions as $key => $value) {
+                if (!is_array($value)) break;
+                if (count($value) == 2) {
+                    $value = [$value[0], '=', $value[1]];
+                }
+                $field = strpos($value[0], ".") === false ? $value[0] : explode(".", $value[0]);
+                $fieldValue = null;
+                if (is_array($field)) {
+                    if (!isset($row[$field[0]][$field[1]])) {
+                        break;
+                    }
+                    $fieldValue = $row[$field[0]][$field[1]];
+                } else {
+                    if (!isset($row[$field])) {
+                        break;
+                    }
+                    $fieldValue = $row[$field];
+                }
+                if (self::compare($fieldValue, $value[2], $value[1])) {
+                    $match++;
+                    if ($or) break; //满足其中一个条件即可
+                }
+            }
+            if (!$or) {
+                // 满足全部条件
+                if ($match == count($conditions)) {
+                    $result[] = $row;
+                }
+            } else {
+                if ($match > 0) {
+                    $result[] = $row;
+                }
+            }
+        }
+        return $result;
+    }
 }

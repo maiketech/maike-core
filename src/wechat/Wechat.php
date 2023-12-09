@@ -11,8 +11,10 @@ class Wechat
 {
     public static function __callStatic(string $service, array $config = [])
     {
+        if (empty($service)) return null;
         if (!$config || count($config) < 1) {
-            $config = Config::get("wechat.{$service}");
+            $fk = "wechat." . strtolower($service);
+            $config = Config::get($fk);
         }
         return new ("maike\\wechat\\{$service}")($config);
     }
