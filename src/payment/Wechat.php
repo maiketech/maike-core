@@ -130,6 +130,9 @@ class Wechat extends PayBase implements PayInterface
                 $data['resource']['nonce'],
                 $data['resource']['ciphertext']
             );
+            if ($data['result'] && !empty($data['result'])) {
+                $data['result'] = JsonUtil::Decode($data['result']);
+            }
         }
         return $data;
     }
@@ -216,16 +219,15 @@ class Wechat extends PayBase implements PayInterface
             $this->config['mch_cert_serial'],
             $this->buildDataSign($signstr)
         );
-        $url = $this->apiUrl . $url;
 
         $headers = array_merge([
             'Accept: application/json',
             'Content-Type: application/json',
             'User-Agent: ' . Request::domain(),
-            "Authorization: WECHATPAY2-SHA256-RSA2048 {$token}",
-            // "Wechatpay-Serial: {$this->config['wechat_cert_serial']}"
+            "Authorization: WECHATPAY2-SHA256-RSA2048 {$token}"
         ], $headers);
 
+        $url = $this->apiUrl . $url;
         $res = false;
         if ($method == 'POST') {
             $data = JsonUtil::Encode($data);
@@ -259,6 +261,7 @@ class Wechat extends PayBase implements PayInterface
         } else {
             $mch_cert = $this->config['mch_cert'];
         }
+
         $pkeyid = openssl_pkey_get_private($mch_cert);
         openssl_sign($data, $signature, $pkeyid, 'sha256WithRSAEncryption');
         return base64_encode($signature);
@@ -322,17 +325,17 @@ class Wechat extends PayBase implements PayInterface
         try {
             // ext-sodium (default installed on >= PHP 7.2)
             if (function_exists('\sodium_crypto_aead_aes256gcm_is_available') && \sodium_crypto_aead_aes256gcm_is_available()) {
-                return \sodium_crypto_aead_aes256gcm_decrypt($ciphertext, $associatedData, $nonceStr, $this->config['mch_secret_key']);
+                return \sodium_crypto_aead_aes256gcm_decrypt($ciphertext, $associatedData, $nonceStr, $this->config['mch_secret']);
             }
             // ext-libsodium (need install libsodium-php 1.x via pecl)
             if (function_exists('\Sodium\crypto_aead_aes256gcm_is_available') && \Sodium\crypto_aead_aes256gcm_is_available()) {
-                return \Sodium\crypto_aead_aes256gcm_decrypt($ciphertext, $associatedData, $nonceStr, $this->config['mch_secret_key']);
+                return \Sodium\crypto_aead_aes256gcm_decrypt($ciphertext, $associatedData, $nonceStr, $this->config['mch_secret']);
             }
             // openssl (PHP >= 7.1 support AEAD)
             if (PHP_VERSION_ID >= 70100 && in_array('aes-256-gcm', \openssl_get_cipher_methods())) {
                 $ctext = substr($ciphertext, 0, -self::AUTH_TAG_LENGTH_BYTE);
                 $authTag = substr($ciphertext, -self::AUTH_TAG_LENGTH_BYTE);
-                return \openssl_decrypt($ctext, 'aes-256-gcm', $this->config['mch_secret_key'], \OPENSSL_RAW_DATA, $nonceStr, $authTag, $associatedData);
+                return \openssl_decrypt($ctext, 'aes-256-gcm', $this->config['mch_secret'], \OPENSSL_RAW_DATA, $nonceStr, $authTag, $associatedData);
             }
         } catch (\Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode());
