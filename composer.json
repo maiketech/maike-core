@@ -16,7 +16,6 @@
             "email": "xkd@qq.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=8.0",
         "topthink/framework": "^8.0",
