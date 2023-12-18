@@ -81,7 +81,7 @@ class Wechat extends PayBase implements PayInterface
                 'native' => '/v3/pay/transactions/native',
             ];
             $order = [
-                'appid' => $this->config['appid'],
+                'appid' => $this->config['app_id'],
                 'mchid' => $this->config['mch_id'],
                 'out_trade_no' => $out_trade_no,
                 'description' => empty($desc) ? $out_trade_no . '付款' : $desc,

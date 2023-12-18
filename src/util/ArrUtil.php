@@ -43,30 +43,32 @@ class ArrUtil
      * 数组转换成树型数组
      * 
      * @param array $arr 要转换的数组
-     * @param string $pk 主键名
-     * @param string $pid 父ID键名
+     * @param string $idKey 主键名
+     * @param string $pidKey 父ID键名
      * @param string $child 子元素键名
+     * @param mixed $root 根ID
      * @return array
      */
-    public static function ToTree(array $arr, int $root = -1, string $pk = 'id', string $pid = 'parent_id', string $child = 'children', bool $onlyChild = false): array
+    public static function ToTree(array $arr, string $idKey = 'id', string $pidKey = 'parent_id', string $child = 'children', $root = 0): array
     {
         $tree = [];
         if (is_array($arr)) {
-            if ($root < 0) {
-                $arr = self::ColumnToKey($arr, $pk);
-                foreach ($arr as $item) {
-                    if (isset($arr[$item[$pid]])) {
-                        $arr[$item[$pid]][$child][] = &$arr[$item[$pk]];
-                    } else {
-                        $tree[] = &$arr[$item[$pk]];
+            // 创建基于主键的数组引用
+            $refer = array();
+            foreach ($arr as $key => $data) {
+                $refer[$data[$idKey]] = &$arr[$key];
+            }
+            foreach ($arr as $key => $data) {
+                // 判断是否存在parent
+                $parentId = $data[$pidKey];
+                if ((int)$parentId === $root || (string)$parentId === $root) {
+                    $tree[] = &$arr[$key];
+                } else {
+                    if (isset($refer[$parentId])) {
+                        $parent = &$refer[$parentId];
+                        $parent[$child][] = &$arr[$key];
                     }
                 }
-            } else {
-                $tree = self::ColumnToKey($arr, $pk);
-                foreach ($tree as $item) {
-                    $tree[$item[$pid]][$child][] = &$tree[$item[$pk]];
-                }
-                return isset($tree[$root]) ? ($onlyChild ? $tree[$root][$child] : [$tree[$root]]) : [];
             }
         }
         return $tree;
