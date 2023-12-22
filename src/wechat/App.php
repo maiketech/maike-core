@@ -47,6 +47,15 @@ class App extends WechatBase
      * @param array $data   参数
      * @param string $page  跳转页面路径
      * @return boolean
+     * @example 
+     * $tplId = 'xxxxxx';
+     * $touser = 'xxxxxx';
+     * $data = [
+     *     'keyword1' => ['value' => '123456'],
+     *     'keyword2' => ['value' => '123456'],
+     * ];
+     * $page = '/pages/index/index';
+     * $res = $app->sendMessage($tplId, $touser, $data, $page);
      */
     public function sendMessage($tplId, $touser, $data, $page = '')
     {

@@ -1,7 +1,7 @@
 {
     "name": "maiketech/maike-core",
     "description": "maiketech php,thinkphp core",
-    "version": "2.1.0",
+    "version": "2.1.2",
     "autoload": {
         "files": [
             "src/core/Common.php"

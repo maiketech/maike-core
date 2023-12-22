@@ -12,10 +12,18 @@ if (!function_exists('pp')) {
      *
      * @param mixed $data
      */
-    function pp($data)
+    function pp(...$vars)
     {
-        halt($data);
-        die("------------ debug -------------");
+        echo '<pre>';
+        foreach ($vars as $data) {
+            if (is_array($data) || is_object($data)) {
+                print_r($data);
+            } else {
+                var_dump($data);
+            }
+        }
+        echo '</pre>';
+        die("------------ debug end -------------");
     }
 }
 
@@ -63,7 +71,7 @@ if (!function_exists('BaseUrl')) {
             $scheme = $request->scheme();
             $prot = $request->port();
             // 拼接完整url
-            $baseUrl = "{$scheme}://" . $request->host()  . (empty($prot) ? '' : ':' . $prot) . '/';
+            $baseUrl = "{$scheme}://" . $request->host()  . (empty($prot) || $prot == '80' ? '' : ':' . $prot) . '/';
         }
         return $baseUrl;
     }
