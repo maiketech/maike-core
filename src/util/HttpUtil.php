@@ -66,7 +66,7 @@ class HttpUtil
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
         if ($method == 'POST' || $method == 'PUT') curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-        if ($header !== false) curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        if ($header && is_array($header)) curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
         curl_setopt($curl, CURLOPT_FAILONERROR, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);

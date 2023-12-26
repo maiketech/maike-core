@@ -84,7 +84,7 @@ class App extends WechatBase
         $result = $this->request('/wxa/business/getuserphonenumber?access_token=' . $this->getAccessToken(), [
             'code' => $code
         ]);
-        return $result;
+        return $result && isset($result['phone_info']) ? $result['phone_info'] : false;
     }
 
     /**
