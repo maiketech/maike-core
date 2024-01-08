@@ -8,7 +8,7 @@ namespace maike\util;
  */
 class CryptoUtil
 {
-    public static function getOpenSSLKey($key, $isPublic = true)
+    private static function getOpenSSLKey($key, $isPublic = true)
     {
         if (empty($key)) return null;
         if (!file_exists($key) && is_string($key)) {
@@ -22,7 +22,15 @@ class CryptoUtil
         }
     }
 
-    public static function RsaEncrypt($data, $key, $isPublic = true)
+    /**
+     * RSA加密
+     *
+     * @param string $data
+     * @param string $key
+     * @param boolean $isPublic
+     * @return string
+     */
+    public static function RSAEncrypt($data, $key, $isPublic = true)
     {
         $key = self::getOpenSSLKey($key, $isPublic);
         if (!$key || $key == null) return null;
@@ -38,7 +46,15 @@ class CryptoUtil
         return $crypto ? base64_encode($crypto) : null;
     }
 
-    public static function RsaDecode($encrypted, $key, $isPublic = true)
+    /**
+     * RSA解密
+     *
+     * @param string $encrypted
+     * @param string $key
+     * @param boolean $isPublic
+     * @return string
+     */
+    public static function RSADecode($encrypted, $key, $isPublic = true)
     {
         if (!is_string($encrypted) || empty($encrypted)) {
             return null;
