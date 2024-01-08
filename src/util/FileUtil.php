@@ -2,7 +2,8 @@
 
 namespace maike\util;
 
-use PhpOffice\PhpWord\IOFactory as PHPWordIOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * 文件工具类
@@ -16,6 +17,64 @@ class FileUtil
 
     public static function WordToPdf($wordTmp, $filePath = null)
     {
+    }
+
+    public static function ExportExcel($data, $filePath = null, $fileName = '')
+    {
+        if ($data && isset($data['data'])) {
+            $data = [$data];
+        }
+        $spreadsheet = new Spreadsheet();
+        //创建sheet
+        foreach ($data as $sheetIndex => $item) {
+            if ($sheetIndex > 0) $spreadsheet->createSheet();
+            $sheet = $spreadsheet->setActiveSheetIndex($sheetIndex);
+            $sheet->setTitle($item['title']);
+            $sheet->getDefaultColumnDimension()->setWidth(15);
+            //表头
+            $rowIndex = 1;
+            foreach ($item['header'] as $row) {
+                $columnIndex = 1;
+                foreach ($row as $val) {
+                    $sheet->setCellValueByColumnAndRow($columnIndex, $rowIndex, $val);
+                    $columnIndex++;
+                }
+                $rowIndex++;
+            }
+            //数据
+            //$rowIndex = count($item['header']);
+            foreach ($item['data'] as $row) {
+                $columnIndex = 1;
+                foreach ($row as $val) {
+                    $sheet->setCellValueByColumnAndRow($columnIndex, $rowIndex, $val);
+                    $columnIndex++;
+                }
+                $rowIndex++;
+            }
+        }
+        $spreadsheet->setActiveSheetIndex(0);
+        // 创建 Excel writer
+        $writer = new Xlsx($spreadsheet);
+        if ($filePath && !empty($filePath)) {
+            //保存为文件
+            if ($writer->save($filePath)) {
+                return $filePath;
+            } else {
+                return false;
+            }
+        } else {
+            //输出文件流
+            ob_end_clean();
+            header("Content-type: text/html; charset=utf-8");
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename=' . urlencode($fileName));
+            header('Cache-Control: max-age=0');
+            $writer->save('php://output');
+            //删除清空
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet);
+            exit;
+        }
     }
 
     /**
